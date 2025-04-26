@@ -7,7 +7,6 @@ from .models import Article, Tag
 from django.views import View
 
 
-# Register View
 class RegisterView(View):
     def get(self, request):
         form = UserCreationForm()
@@ -22,7 +21,6 @@ class RegisterView(View):
         return render(request, 'register.html', {'form': form})
 
 
-# Login View
 class LoginView(View):
     def get(self, request):
         form = AuthenticationForm()
@@ -37,29 +35,26 @@ class LoginView(View):
         return render(request, 'login.html', {'form': form})
 
 
-# Logout View
 def Logout_view(request):
     logout(request)
     return redirect('/login/')
 
 
-# /articles/ - BlogView: Maqolalar ro'yxatini va yangi maqola qo'shishni ko'rsatadi
 class BlogView(View):
     def get(self, request):
-        articles = Article.objects.all().order_by('-created_at')  # Maqolalarni chiqarish
+        articles = Article.objects.all().order_by('-created_at')
         return render(request, 'articles.html', {'articles': articles})
 
     def post(self, request):
         if not request.user.is_authenticated:
-            return redirect('/login/')  # Agar foydalanuvchi tizimga kirgan bo'lmasa, login sahifasiga yuboriladi
+            return redirect('/login/')
 
-        title = request.POST.get('title')  # Maqola sarlavhasi
-        context = request.POST.get('context')  # Maqola matni
-        tag_names = request.POST.get('tags', '').split(',')  # Teglar
+        title = request.POST.get('title')
+        context = request.POST.get('context')
+        tag_names = request.POST.get('tags', '').split(',')
 
-        slug = slugify(title)  # Slug avtomatik tarzda generatsiya qilinadi
+        slug = slugify(title)
 
-        # Yangi maqolani yaratish
         article = Article.objects.create(
             title=title,
             context=context,
@@ -67,29 +62,24 @@ class BlogView(View):
             slug=slug
         )
 
-        # Teglarni qo'shish
         for tag_name in tag_names:
             tag, _ = Tag.objects.get_or_create(name=tag_name.strip())
             article.tags.add(tag)
 
-        return redirect('/articles/')  # Maqola muvaffaqiyatli qo'shilgandan so'ng, maqolalar ro'yxatiga qaytaradi
+        return redirect('/articles/')
 
 
-# /articles/<slug>/ - ArticleView: Maqolaning to'liq ma'lumotini ko'rsatadi
 class ArticleView(View):
     def get(self, request, slug):
-        article = get_object_or_404(Article, slug=slug)  # Slug bo'yicha maqolani olish
+        article = get_object_or_404(Article, slug=slug)
         return render(request, 'article_detail.html', {'article': article})
 
 
-# /my-articles/ - MyArticlesView: Foydalanuvchining o'ziga tegishli maqolalarini ko'rsatadi
 @login_required
 def my_articles_view(request):
-    articles = Article.objects.filter(author=request.user)  # Faqat o'z maqolalari
+    articles = Article.objects.filter(author=request.user)
     return render(request, 'my_articles.html', {'articles': articles})
 
-
-from django.shortcuts import render
 
 def home(request):
     return render(request, 'home.html')
