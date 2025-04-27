@@ -1,0 +1,8 @@
+<!-- my_articles.html -->
+<h1>Your Articles</h1>
+
+<ul>
+    {% for article in articles %}
+        <li><a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a></li>
+    {% endfor %}
+</ul>

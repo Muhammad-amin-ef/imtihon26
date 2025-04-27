@@ -1,0 +1,22 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog</title>
+</head>
+<body>
+    <nav>
+        {% if user.is_authenticated %}
+            <a href="/articles/">Barcha maqolalar</a> |
+            <a href="/my-articles/">Mening maqolalarim</a> |
+            <a href="/logout/">Chiqish</a>
+        {% else %}
+            <a href="/login/">Kirish</a> |
+            <a href="/register/">Ro'yxatdan o'tish</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

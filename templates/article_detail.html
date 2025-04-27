@@ -1,0 +1,28 @@
+<!-- article_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+</head>
+<body>
+    <h1>{{ article.title }}</h1>
+
+    <p><strong>Author:</strong> {{ article.author.username }}</p>  <!-- Muallifni ko'rsatish -->
+
+    <div>
+        <p>{{ article.context }}</p>  <!-- Maqola matni -->
+    </div>
+
+    <div>
+        <strong>Tags:</strong>
+        {% for tag in article.tags.all %}
+            <span>{{ tag.name }}</span>
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'articles' %}">Back to Articles</a>  <!-- Maqolalar ro'yxatiga qaytish uchun link -->
+</body>
+</html>
